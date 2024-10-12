@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+      "declaration": true,
+      "declarationDir": "./dist/types",
+      "outDir": "./dist",
+      "moduleResolution": "node",
+      "module": "commonjs",
+      "target": "es5",
+      "strict": true
+    },
+    "include": ["src/**/*.ts"]
+  }
+  

@@ -1,0 +1,21 @@
+.users-viewer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 75%;
+    margin: 0 auto;
+}
+
+.top-bar {
+    display: flex; 
+    align-items: center;
+    margin: 15px; 
+    width: calc(100% - 30px);
+    gap: 10px; 
+}
+
+.create-button {
+    height: 45px;
+    width: 125px;
+}

@@ -1,0 +1,12 @@
+.cards-collection {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    width: 100%;
+    gap: 10px;
+    margin: 0 auto;
+  }
+  
+  .card-item {
+    padding: 15px;
+  }
+  
