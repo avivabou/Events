@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.WORK_STATUSES_COLORS = exports.WORK_STATUSES = void 0;
-exports.WORK_STATUSES = ["Working", "On Vacation", "Business Trip", "Lunch Time"];
-exports.WORK_STATUSES_COLORS = {
-    "Working": "lightgreen",
-    "On Vacation": "red",
-    "Business Trip": "purple",
-    "Lunch Time": "darkorange",
+exports.TICKET_TYPE_COLORS = exports.TICKET_TYPES = void 0;
+exports.TICKET_TYPES = ["Normal", "Golden Ring", "VIP", "Accessible"];
+exports.TICKET_TYPE_COLORS = {
+    "Normal": "red",
+    "Golden Ring": "darkorange",
+    "VIP": "purple",
+    "Accessible": "blue",
 };

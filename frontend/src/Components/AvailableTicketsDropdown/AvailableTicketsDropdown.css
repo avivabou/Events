@@ -1,0 +1,9 @@
+.available-ticket-types-dropdown {
+    border: none;
+    border-bottom: 1px solid #ccc;
+    width: 100%;
+}
+
+.available-ticket-types-dropdown:focus {
+    outline: none;
+}

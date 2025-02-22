@@ -1,10 +1,10 @@
-import { WorkStatus } from "./types";
+import { TicketType } from "./types";
 
-export const WORK_STATUSES = ["Working", "On Vacation", "Business Trip", "Lunch Time"] as const;
+export const TICKET_TYPES = ["Normal", "Golden Ring", "VIP", "Accessible"] as const;
 
-export const WORK_STATUSES_COLORS: {[key in WorkStatus] : string} = {
-    "Working": "lightgreen",
-    "On Vacation": "red",
-    "Business Trip": "purple",
-    "Lunch Time": "darkorange",
+export const TICKET_TYPE_COLORS: {[key in TicketType] : string} = {
+    "Normal": "red",
+    "Golden Ring": "darkorange",
+    "VIP": "purple",
+    "Accessible": "blue",
 }

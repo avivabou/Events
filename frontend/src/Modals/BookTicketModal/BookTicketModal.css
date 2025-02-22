@@ -1,4 +1,4 @@
-.create-user-modal {
+.book-ticket-modal {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -10,6 +10,12 @@
     padding: 16px;
     border-radius: 8px;
     box-shadow: 24px;
+  }
+
+  .book-ticket-image {
+    width: 400px;
+    height: 400px;
+    object-fit: cover;
   }
   
   .modal-buttons {

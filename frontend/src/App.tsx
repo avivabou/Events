@@ -1,70 +1,62 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo, useCallback, useRef } from 'react';
 import axios from 'axios';
-import "./App.css"
-import UsersViewer from './Pages/UsersViewer/UsersViewer';
-import { WorkStatus } from '@employee-statuses/shared';
+import './App.css';
+import EventsViewer from './Pages/EventsViewer/EventsViewer';
+import { EventViewingMode, VIEWING_MODES } from './Pages/EventsViewer/ViewingModes';
 
 const App = () => {
-  const [users, setUsers] = useState<any>();
+  const [events, setEvents] = useState<any[]>([]);
+  const [_, setPage] = useState(0);
+  const [isFetching, setIsFetching] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const hasFetchedFirstPage = useRef(false);
+
+  const loadPage = useCallback(async (pageIndex: number) => {
+    if (isFetching || !hasMore) return;
+    setIsFetching(true);
+    try {
+      const response = await axios.get(`http://localhost:8000/events/page?page=${pageIndex}`);
+      const newEvents = response.data.map((event: any) => ({
+        ...event,
+        date: new Date(event.date),
+        id: event._id,
+      }));
+      if (newEvents.length === 0) {
+        setHasMore(false);
+      } else {
+        setEvents((prevEvents) => [...prevEvents, ...newEvents]);
+      }
+    } catch (error) {
+      console.error('Error loading events:', error);
+    } finally {
+      setIsFetching(false);
+    }
+  }, [isFetching, hasMore]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const response = await axios.get('http://localhost:8000/users');
-      const usersWithId = response.data.map((user: any) => ({
-        ...user,
-        id: user._id,
-      }));
-      setUsers(usersWithId);
-    };
-    fetchData();
+    if (!hasFetchedFirstPage.current) {
+      hasFetchedFirstPage.current = true;
+      loadPage(0);
+    }
+  }, [loadPage]);
+
+  const loadMoreEvents = useCallback(() => {
+    if (isFetching || !hasMore) return;
+    setPage((prevPage) => {
+      const nextPage = prevPage + 1;
+      loadPage(nextPage);
+      return nextPage;
+    });
+  }, [isFetching, hasMore, loadPage]);
+
+  const viewingMode: EventViewingMode = useMemo(() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('userType') === 'tourist' ? VIEWING_MODES.LIST : VIEWING_MODES.GRID3;
   }, []);
 
-  const handleStatusChange = async (id: string, newStatus: string) => {
-    try {
-      await axios.put(`http://localhost:8000/users/${id}`, { status: newStatus });
-      setUsers((prevUsers: any[]) => 
-        prevUsers.map(user => 
-          user.id === id ? { ...user, status: newStatus } : user
-        )
-      );
-    } catch (error) {
-      console.error('Failed to update user status', error);
-    }
-  };
-
-  const createNewUser = async (name: string, status: WorkStatus, img: string) => {
-    try {
-      const response = await fetch('http://localhost:8000/users', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name, status, img }),
-      });
-  
-      if (!response.ok) {
-        throw new Error('Failed to create new user');
-      }
-      const newUser = await response.json();
-      setUsers([...users, newUser])
-      return newUser;
-    } catch (error) {
-      console.error('Error creating new user:', error);
-    }
-  };
-
-  const deleteUser = async (id: string) => {
-    try {
-      await axios.delete(`http://localhost:8000/users/${id}`); 
-      setUsers(users.filter((user: any) => user.id !== id))
-    } catch (error) {
-      console.error("Error deleting user:", error);
-    }
-  };
-
   return (
-    <div className='app'>
-      <UsersViewer users={users} updateUserStatus={handleStatusChange} createNewUser={createNewUser} deleteUser={deleteUser}/>
+    <div className="app">
+      <EventsViewer events={events} viewingMode={viewingMode} loadMoreEvents={loadMoreEvents} />
     </div>
   );
 };

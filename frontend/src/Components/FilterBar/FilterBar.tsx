@@ -7,31 +7,38 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import './FilterBar.css';
 import { useState, useMemo, useEffect } from 'react';
-import { User } from '@employee-statuses/shared';
+import { Event } from '@tickets/shared';
+
+type ManualKeys = 'ticket type'
+type FilterKeys = keyof Event | ManualKeys;
 
 const JsSearch: any = require('js-search');
+const filterModes: (FilterKeys)[] = ['name', 'description', 'date', 'ticket type'];
 
-const filterModes: (keyof User)[] = ['name', 'status', 'id'];
-type FilterMode = (typeof filterModes)[number];
-
-interface FilterBarProps {
-  allUsers: User[];
-  onFilterAction: (filteredUsers: User[]) => void;
+function AddManualKeysToItems (events: Event[]) {
+  return (events || []).map((event) => ({...event, 'ticket type': Object.keys(event.availableTickets)}))
 }
 
-const FilterBar: React.FC<FilterBarProps> = ({ allUsers, onFilterAction }) => {
-  const [currentFilterMode, setFilterMode] = useState<FilterMode>(filterModes[0]);
+
+interface FilterBarProps {
+  allEvents: Event[];
+  onFilterAction: (filteredEvents: Event[]) => void;
+}
+
+const FilterBar: React.FC<FilterBarProps> = ({ allEvents, onFilterAction }) => {
+  const [currentFilterMode, setFilterMode] = useState<FilterKeys>(filterModes[0]);
   const [lastSearchTerm, setSearchTerm] = useState<string>('');
 
   const searchTools = useMemo(() => {
+    const mapedEvents = AddManualKeysToItems(allEvents);
     return filterModes.reduce((acc, filterMode) => {
       const search = new JsSearch.Search('id');
       search.addIndex(filterMode);
-      search.addDocuments(allUsers ?? []);
+      search.addDocuments(mapedEvents);
       acc[filterMode] = search;
       return acc;
-    }, {} as Record<FilterMode, any>);
-  }, [allUsers]);
+    }, {} as Record<FilterKeys, any>);
+  }, [allEvents]);
 
   useEffect(()=> {
     onFilterSearch(lastSearchTerm);
@@ -39,17 +46,17 @@ const FilterBar: React.FC<FilterBarProps> = ({ allUsers, onFilterAction }) => {
   }, [searchTools, currentFilterMode])
 
   function changeFilterMode(event: SelectChangeEvent){
-    const filterMode = event.target.value as FilterMode;
+    const filterMode = event.target.value as FilterKeys;
     setFilterMode(filterMode);
   };
 
   function onFilterSearch(searchTerm: string){
     setSearchTerm(searchTerm);
     if (searchTerm.length === 0){
-        onFilterAction(allUsers);
+        onFilterAction(allEvents);
     } else {
         const searchResults = searchTools[currentFilterMode].search(searchTerm) || [];
-        onFilterAction(searchResults as User[]);
+        onFilterAction(searchResults as Event[]);
     }
   };
 

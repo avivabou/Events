@@ -1,0 +1,28 @@
+.events-viewer {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: 75%;
+    margin: 0 auto;
+    padding-top: 60px;
+    box-sizing: border-box;
+}
+
+.top-bar {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    width: calc(100% - 30px);
+    gap: 10px;
+    position: fixed; 
+    top: 0;
+    left: 0;
+    z-index: 10;
+    background-color: rgb(241, 241, 241);
+}
+
+.content-container {
+    margin-top: 15px;
+    width: 100%
+}

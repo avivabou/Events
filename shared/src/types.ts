@@ -1,10 +1,13 @@
-import { WORK_STATUSES } from "./constants";
+import { TICKET_TYPES } from "./constants";
 
-export type WorkStatus = (typeof WORK_STATUSES)[number];
+export type TicketType = (typeof TICKET_TYPES)[number];
 
-export type User = {
+export type Event = {
     id: string;
     name: string;
-    status: WorkStatus;
-    img: string;
-}
+    image: string;
+    description: string;
+    shortDescription: string;
+    date: Date;
+    availableTickets: Record<TicketType, number>;
+};

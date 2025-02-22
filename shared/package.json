@@ -1,5 +1,5 @@
 {
-  "name": "@employee-statuses/shared",
+  "name": "@tickets/shared",
   "version": "1.0.0",
   "main": "dist/constants.js",
   "types": "dist/types/index.d.ts",
